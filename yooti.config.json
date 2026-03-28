@@ -1,0 +1,102 @@
+{
+  "version": "1.0.0",
+  "project": "yooti-ri",
+  "context": "greenfield",
+  "stage": 3,
+  "stack": {
+    "services": [
+      {
+        "name": "batch",
+        "lang": "python",
+        "path": "batch/analytics"
+      },
+      {
+        "name": "frontend",
+        "lang": "react",
+        "path": "frontend/dashboard"
+      }
+    ]
+  },
+  "pipeline": {
+    "stage": 3,
+    "description": "Review — agent writes code and tests. Team reviews PR and controls all deploys.",
+    "phases": {
+      "requirements": "agent",
+      "planning": "agent",
+      "codegen": "agent",
+      "testing": "agent",
+      "pr_review": "human",
+      "staging": "human",
+      "production": "human"
+    },
+    "gates": {
+      "g1_pm_signoff": true,
+      "g2_arch_review": true,
+      "g3_pr_review": true,
+      "g4_qa_signoff": false,
+      "g5_deploy_approval": false
+    }
+  },
+  "toolchain": {
+    "api": {
+      "linter": "eslint",
+      "formatter": "prettier",
+      "type_check": "tsc",
+      "test_runner": "vitest",
+      "test_command": "npm run test:coverage",
+      "test_unit": "npm run test -- tests/unit/",
+      "test_integration": "npm run test -- tests/integration/",
+      "coverage_threshold": 80,
+      "new_code_threshold": 90,
+      "mutation": "stryker",
+      "security": [
+        "snyk",
+        "semgrep"
+      ]
+    },
+    "frontend": {
+      "linter": "eslint",
+      "type_check": "tsc",
+      "test_runner": "vitest",
+      "test_command": "npm run test:coverage",
+      "a11y_runner": "axe-core",
+      "e2e_runner": "playwright",
+      "component_isolation": "storybook",
+      "responsive_breakpoints": [
+        375,
+        768,
+        1280
+      ],
+      "accessibility_standard": "WCAG21AA",
+      "performance": "lighthouse-ci"
+    },
+    "batch": {
+      "linter": "ruff",
+      "formatter": "ruff",
+      "type_check": "mypy",
+      "test_runner": "pytest",
+      "test_command": "pytest -m 'not eval and not integration'",
+      "test_unit": "pytest -m 'not eval and not integration'",
+      "test_integration": "pytest -m integration",
+      "test_evals": "pytest --eval",
+      "coverage_threshold": 80,
+      "aws_mock": "moto"
+    }
+  },
+  "quality_gates": {
+    "coverage_threshold": 80,
+    "new_code_coverage": 90,
+    "mutation_score": 85,
+    "lighthouse_performance": 80,
+    "lighthouse_accessibility": 90,
+    "max_agent_iterations": 5,
+    "zero_lint_warnings": true,
+    "zero_type_errors": true,
+    "zero_security_findings": true,
+    "zero_a11y_violations": true
+  },
+  "yooti_os": {
+    "enabled": false,
+    "endpoint": null
+  }
+}

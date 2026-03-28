@@ -1,0 +1,83 @@
+version: '3.9'
+
+services:
+
+  api_python:
+    build: ./services/api_python
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    volumes:
+      - ./services/api_python:/app
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  agents:
+    build: ./agents
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - LANGCHAIN_TRACING_V2=${LANGCHAIN_TRACING_V2}
+      - LANGCHAIN_API_KEY=${LANGCHAIN_API_KEY}
+    volumes:
+      - ./agents:/app
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend/dashboard
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/dashboard:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=app
+      - POSTGRES_DB=appdb
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./pipeline/scripts/init-pgvector.sql:/docker-entrypoint-initdb.d/01-pgvector.sql
+      - ./pipeline/scripts/init-age.sql:/docker-entrypoint-initdb.d/02-age.sql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pg_data:
+  redis_data:
