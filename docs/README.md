@@ -28,3 +28,19 @@ See docs/GATES.md for all five gate criteria.
 no bash required. If you see any .sh files in older projects,
 they have been replaced by .js equivalents that run natively
 on all platforms. Git Bash and WSL are not required.
+
+## First time setup note
+
+After running yooti init, run npm install once locally to generate
+package-lock.json before building Docker images:
+
+```bash
+cd services/api && npm install && cd ../..
+cd frontend/dashboard && npm install && cd ../..
+git add services/api/package-lock.json frontend/dashboard/package-lock.json
+git commit -m "chore: add package-lock.json"
+docker compose up -d
+```
+
+Once package-lock.json is committed, CI workflows can use npm ci
+for faster, deterministic installs.
