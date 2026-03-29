@@ -1,10 +1,15 @@
-import { describe, it, expect, vi } from 'vitest'
-import { screen } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders, expectNoA11yViolations } from '../helpers/render'
 import { ImageGallery } from '../../src/components/ImageGallery'
 import { QuantitySelector } from '../../src/components/QuantitySelector'
 import { NotFoundPage } from '../../src/components/NotFoundPage'
+import { ProductDetailPage } from '../../src/pages/ProductDetailPage'
+import { CartDrawer } from '../../src/components/CartDrawer'
+import * as cartApi from '../../src/api/cart'
+import * as productsApi from '../../src/api/products'
+import type { Cart } from '../../src/types/cart'
 
 describe('ImageGallery', () => {
   it('renders main image', () => {
@@ -105,5 +110,84 @@ describe('NotFoundPage', () => {
   it('has no accessibility violations', async () => {
     const { container } = renderWithProviders(<NotFoundPage />)
     await expectNoA11yViolations(container)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// STORY-014 regression tests — Add to Cart wiring in ProductDetailPage
+// AC-1: clicking Add to Cart calls cartApi.addToCart with the product id + quantity
+// AC-1: cart drawer opens after successful add
+// ---------------------------------------------------------------------------
+
+function makeCart(overrides: Partial<Cart> = {}): Cart {
+  return {
+    items: [],
+    subtotal: 0,
+    estimated_tax: 0,
+    total: 0,
+    item_count: 0,
+    ...overrides,
+  }
+}
+
+const mockProduct = {
+  id: 'prod-42',
+  name: 'Super Widget',
+  description: 'A great widget',
+  price: 49.99,
+  stock_quantity: 5,
+  stock_status: 'in_stock' as const,
+  thumbnail_url: null,
+  images: [],
+  category_name: 'Electronics',
+  category_slug: 'electronics',
+}
+
+describe('ProductDetailPage — Add to Cart wiring (STORY-014)', () => {
+  beforeEach(() => {
+    vi.spyOn(productsApi, 'getProductById').mockResolvedValue(mockProduct)
+    vi.spyOn(cartApi, 'addToCart').mockResolvedValue(
+      makeCart({
+        items: [{ product_id: 'prod-42', product_name: 'Super Widget', price: 49.99, quantity: 1, subtotal: 49.99, stock_warning: null }],
+        item_count: 1,
+      })
+    )
+  })
+
+  it('AC-1: clicking Add to Cart calls cartApi.addToCart with product id and default quantity 1', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<><ProductDetailPage /><CartDrawer /></>)
+
+    const button = await screen.findByRole('button', { name: /add to cart/i })
+    await user.click(button)
+
+    await waitFor(() => {
+      expect(cartApi.addToCart).toHaveBeenCalledWith('prod-42', 1)
+    })
+  })
+
+  it('AC-1: cart drawer opens after clicking Add to Cart on the detail page', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<><ProductDetailPage /><CartDrawer /></>)
+
+    const button = await screen.findByRole('button', { name: /add to cart/i })
+    await user.click(button)
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog', { name: /shopping cart/i })).toBeInTheDocument()
+    })
+  })
+
+  it('AC-1: Add to Cart button is not present when product is out of stock', async () => {
+    vi.spyOn(productsApi, 'getProductById').mockResolvedValue({
+      ...mockProduct,
+      stock_status: 'out_of_stock',
+      stock_quantity: 0,
+    })
+
+    renderWithProviders(<ProductDetailPage />)
+
+    await screen.findByText(/out of stock/i)
+    expect(screen.queryByRole('button', { name: /add to cart/i })).not.toBeInTheDocument()
   })
 })

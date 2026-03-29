@@ -2,18 +2,25 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getCategories } from '../api/products'
 import { useProducts } from '../hooks/useProducts'
+import { useCart } from '../contexts/CartContext'
 import { ProductGrid } from '../components/ProductGrid'
-import type { Category } from '../types/product'
+import { SearchBar } from '../components/SearchBar'
+import type { Category, ProductListItem } from '../types/product'
 
 export function CataloguePage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [categories, setCategories] = useState<Category[]>([])
+  const [searchResults, setSearchResults] = useState<ProductListItem[] | null>(null)
+  const [searchTotal, setSearchTotal] = useState(0)
   const sentinelRef = useRef<HTMLDivElement>(null)
 
   const category = searchParams.get('category') ?? undefined
   const sort = searchParams.get('sort') ?? undefined
 
   const { products, isLoading, hasNext, loadMore, total } = useProducts({ category, sort })
+  const { addItem } = useCart()
+
+  const isSearchActive = searchResults !== null
 
   useEffect(() => {
     void getCategories().then(setCategories)
@@ -66,6 +73,24 @@ export function CataloguePage() {
     <main className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Products</h1>
 
+      <SearchBar
+        onResults={(items, resultTotal) => {
+          setSearchResults(items)
+          setSearchTotal(resultTotal)
+        }}
+        onClear={() => {
+          setSearchResults(null)
+          setSearchTotal(0)
+        }}
+      />
+
+      {isSearchActive ? (
+        <>
+          <p className="text-sm text-gray-500 mb-4">{searchTotal} search results</p>
+          <ProductGrid products={searchResults} onAddToCart={addItem} />
+        </>
+      ) : (
+        <>
       <div className="flex gap-4 mb-6">
         <label className="flex items-center gap-2">
           Category:
@@ -99,11 +124,13 @@ export function CataloguePage() {
 
       <p className="text-sm text-gray-500 mb-4">{total} products</p>
 
-      <ProductGrid products={products} />
+      <ProductGrid products={products} onAddToCart={addItem} />
 
       {isLoading && <p className="text-center py-4">Loading...</p>}
 
       <div ref={sentinelRef} aria-hidden="true" />
+        </>
+      )}
     </main>
   )
 }

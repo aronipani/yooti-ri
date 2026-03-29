@@ -1,1 +1,10 @@
-{"story_id":"STORY-010","generated_at":"2026-03-29T03:43:24Z","overall":75.95,"new_code":100.0,"files":[{"file":"src/middleware/rate_limit.py","lines":100.0,"branches":100.0}],"note":"Rate limiter fully covered. All 13 tests exercise the RateLimiter class, config, and response builder."}
+{
+  "story_id": "STORY-010",
+  "generated_at": "2026-03-29T04:10:00Z",
+  "overall": 99.79,
+  "new_code": 100.0,
+  "files": [
+    { "file": "src/middleware/rate_limit.py", "lines": 100.0, "branches": 100.0 }
+  ],
+  "note": "Overall 99.79% (476 stmts, 1 miss). Rate limiter fully covered at 100%. All 13 tests exercise allow/block/degrade/config paths."
+}

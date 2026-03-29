@@ -1,0 +1,7 @@
+{
+  "captured_at": "2026-03-29T04:57:13.538410+00:00",
+  "tag": "--sprint",
+  "git_sha": "56a2409629c0bacb5a25e18b6920e3a7dd2a686b",
+  "git_branch": "feat/story-010",
+  "note": "Run with real test suite output for full baseline"
+}

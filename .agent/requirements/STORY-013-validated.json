@@ -1,0 +1,75 @@
+{
+  "story_id": "STORY-013",
+  "title": "As a shopper, I want clear loading and error states throughout the app so that I always know what is happening",
+  "type": "feature",
+  "priority": "P1",
+  "sprint": 1,
+  "affected_layers": [
+    "frontend"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "given": "any page is loading data from the API",
+      "when": "the request is in flight",
+      "then": "a skeleton loader matching the shape of the content appears — not a spinning circle",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-2",
+      "given": "an API request fails",
+      "when": "the error is caught",
+      "then": "a user-friendly error message appears with a Retry button — no raw error text or stack traces shown to the user",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-3",
+      "given": "a user action succeeds (add to cart, register, login)",
+      "when": "the action completes",
+      "then": "a toast notification appears in the top right for 3 seconds confirming success",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-4",
+      "given": "a user action fails (network error, validation error)",
+      "when": "the error occurs",
+      "then": "a toast notification appears with a red background and descriptive error message",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-5",
+      "given": "a page has no data to show (empty orders list, no search results)",
+      "when": "the empty state renders",
+      "then": "an illustrated empty state with a helpful message and a relevant CTA button appears",
+      "testable": true,
+      "test_layer": "unit"
+    }
+  ],
+  "non_functional_requirements": {
+    "performance": "Skeleton loaders appear within 16ms of request start — no visible delay before skeleton",
+    "accessibility": "Toast notifications announced to screen readers via aria-live. Skeleton loaders have aria-busy=true.",
+    "security": "Error messages never expose internal error details, stack traces, or server paths"
+  },
+  "definition_of_done": [
+    "SkeletonCard and SkeletonList components match product card and list shapes",
+    "ErrorBoundary component with retry functionality",
+    "Toast notification system using shadcn/ui Toaster",
+    "EmptyState component with icon, message, and CTA",
+    "All components pass axe-core scan",
+    "Coverage on new code >= 90%",
+    "Toast announcements verified with aria-live"
+  ],
+  "constitutions_to_apply": [
+    "typescript",
+    "react",
+    "security",
+    "testing"
+  ],
+  "agent_instructions": "Use shadcn/ui Skeleton for loading states. Use shadcn/ui Toaster + toast() for notifications. Skeleton shapes must match the real content — ProductCard skeleton should be the same dimensions as the real ProductCard. EmptyState should accept icon, title, description, and ctaLabel + ctaHref props.",
+  "estimated_complexity": "M",
+  "ambiguity_flags": []
+}

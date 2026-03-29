@@ -1,0 +1,67 @@
+{
+  "story_id": "STORY-011",
+  "title": "As a developer, I want a design system configured so that all UI components have consistent visual styling",
+  "type": "feature",
+  "priority": "P0",
+  "sprint": 1,
+  "affected_layers": [
+    "frontend"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "given": "the frontend project is set up",
+      "when": "Tailwind CSS is configured",
+      "then": "a custom colour palette is defined with primary, secondary, success, warning, error, and neutral tokens available as Tailwind classes",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-2",
+      "given": "shadcn/ui is installed",
+      "when": "a developer imports a shadcn component",
+      "then": "the component renders with the project colour tokens applied correctly",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-3",
+      "given": "the design system is configured",
+      "when": "any page is viewed on a mobile device (375px)",
+      "then": "the layout is fully responsive and no horizontal scrollbar appears",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-4",
+      "given": "the design system is configured",
+      "when": "an axe-core accessibility scan runs on any page",
+      "then": "colour contrast ratios meet WCAG AA — at least 4.5:1 for normal text",
+      "testable": true,
+      "test_layer": "unit"
+    }
+  ],
+  "non_functional_requirements": {
+    "performance": "CSS bundle under 50KB gzipped",
+    "accessibility": "All colour tokens meet WCAG AA contrast ratios",
+    "security": "No external font or icon CDN calls — self-hosted or bundled only"
+  },
+  "definition_of_done": [
+    "tailwind.config.js has custom colour palette defined",
+    "shadcn/ui initialised and at least Button, Card, Input, Badge components available",
+    "globals.css has CSS custom properties matching Tailwind tokens",
+    "Responsive breakpoints tested at 375px, 768px, 1280px",
+    "Colour contrast verified in accessibility test",
+    "Coverage on new code >= 90%",
+    "Accessibility: 0 axe-core violations"
+  ],
+  "constitutions_to_apply": [
+    "typescript",
+    "react",
+    "security",
+    "testing"
+  ],
+  "agent_instructions": "Configure Tailwind with a warm neutral palette suitable for ecommerce. Primary: a trustworthy blue or indigo. Use shadcn/ui new-york style. Define CSS custom properties in globals.css so tokens are available both in Tailwind classes and inline styles. Do NOT use external CDN links for fonts — use next/font or vite-plugin-fonts.",
+  "estimated_complexity": "S",
+  "ambiguity_flags": []
+}

@@ -196,3 +196,65 @@ class TestUpdateItem:
         )
 
         assert result.items == []
+
+    @pytest.mark.anyio
+    async def test_returns_empty_cart_when_refresh_returns_none(self) -> None:
+        cart = _make_cart()
+        cart_repo = AsyncMock()
+        cart_repo.get_active_cart.side_effect = [cart, None]
+        product_repo = AsyncMock()
+        service = CartService(cart_repo=cart_repo, product_repo=product_repo)
+
+        result = await service.update_item(
+            user_id=uuid.uuid4(), product_id=uuid.uuid4(), quantity=2
+        )
+
+        assert result.items == []
+        assert result.item_count == 0
+
+
+class TestRemoveItem:
+    """Tests for CartService.remove_item."""
+
+    @pytest.mark.anyio
+    async def test_calls_repo_remove(self) -> None:
+        cart = _make_cart()
+        cart_repo = AsyncMock()
+        cart_repo.get_active_cart.return_value = cart
+        product_repo = AsyncMock()
+        service = CartService(cart_repo=cart_repo, product_repo=product_repo)
+
+        product_id = uuid.uuid4()
+        await service.remove_item(user_id=uuid.uuid4(), product_id=product_id)
+
+        cart_repo.remove_item.assert_called_once_with(
+            cart_id=cart.id, product_id=product_id
+        )
+
+    @pytest.mark.anyio
+    async def test_returns_empty_cart_when_no_cart(self) -> None:
+        cart_repo = AsyncMock()
+        cart_repo.get_active_cart.return_value = None
+        product_repo = AsyncMock()
+        service = CartService(cart_repo=cart_repo, product_repo=product_repo)
+
+        result = await service.remove_item(
+            user_id=uuid.uuid4(), product_id=uuid.uuid4()
+        )
+
+        assert result.items == []
+
+    @pytest.mark.anyio
+    async def test_returns_empty_cart_when_refresh_returns_none(self) -> None:
+        cart = _make_cart()
+        cart_repo = AsyncMock()
+        cart_repo.get_active_cart.side_effect = [cart, None]
+        product_repo = AsyncMock()
+        service = CartService(cart_repo=cart_repo, product_repo=product_repo)
+
+        result = await service.remove_item(
+            user_id=uuid.uuid4(), product_id=uuid.uuid4()
+        )
+
+        assert result.items == []
+        assert result.item_count == 0

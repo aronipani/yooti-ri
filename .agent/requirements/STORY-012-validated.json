@@ -1,0 +1,77 @@
+{
+  "story_id": "STORY-012",
+  "title": "As a shopper, I want a consistent page layout with navigation so that I can move around the site easily",
+  "type": "feature",
+  "priority": "P0",
+  "sprint": 1,
+  "affected_layers": [
+    "frontend"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "given": "a shopper visits any page",
+      "when": "the page loads",
+      "then": "they see a header with the shop logo, navigation links (Home, Catalogue, My Orders), a cart icon showing item count, and a Sign In or user name depending on auth state",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-2",
+      "given": "a shopper is on a mobile device (375px wide)",
+      "when": "they tap the hamburger menu",
+      "then": "a mobile navigation drawer opens showing all nav links and closes when a link is tapped",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-3",
+      "given": "a shopper visits any page",
+      "when": "the page loads",
+      "then": "they see a footer with copyright notice and links to Terms and Privacy",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-4",
+      "given": "a shopper navigates between pages",
+      "when": "a page transition occurs",
+      "then": "a loading indicator appears and disappears cleanly — no flash of unstyled content",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-5",
+      "given": "the layout is rendered",
+      "when": "an axe-core scan runs",
+      "then": "there are 0 accessibility violations — nav has role=navigation, landmarks are correct",
+      "testable": true,
+      "test_layer": "unit"
+    }
+  ],
+  "non_functional_requirements": {
+    "performance": "Layout shell renders in under 100ms — no layout shift",
+    "accessibility": "Skip to main content link present. Nav has aria-label. Mobile menu is keyboard accessible.",
+    "security": "No authentication tokens exposed in the DOM"
+  },
+  "definition_of_done": [
+    "Header component with logo, nav, cart icon, auth state",
+    "Mobile nav drawer with hamburger trigger",
+    "Footer component",
+    "RootLayout wraps all pages",
+    "Loading state between page transitions",
+    "All components pass axe-core scan",
+    "Coverage on new code >= 90%",
+    "Accessibility: 0 violations",
+    "Responsive at 375px, 768px, 1280px"
+  ],
+  "constitutions_to_apply": [
+    "typescript",
+    "react",
+    "security",
+    "testing"
+  ],
+  "agent_instructions": "Header should be sticky. Cart icon shows a badge with item count from cart context (wire to CartContext from STORY-005 or use placeholder count of 0 if not yet available). Use shadcn/ui Sheet for the mobile drawer. The RootLayout component wraps all page-level routes.",
+  "estimated_complexity": "M",
+  "ambiguity_flags": []
+}
