@@ -1,0 +1,23 @@
+{
+  "story_id": "STORY-00001",
+  "title": "Create a product listing page",
+  "started_at": "2026-03-28T23:31:10.674Z",
+  "events": [
+    {
+      "at": "2026-03-28T23:31:10.676Z",
+      "phase": 1,
+      "type": "PHASE_START",
+      "detail": "Requirements ingestion started"
+    },
+    {
+      "at": "2026-03-28T23:31:10.677Z",
+      "phase": 1,
+      "type": "AGENT_ACTION",
+      "detail": "Story parsed → STORY-00001-validated.json",
+      "output": {
+        "ac_count": 1,
+        "ambiguity_flags": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "story_id": "STORY-00001",
+  "title": "Create a product listing page",
+  "type": "feature",
+  "priority": "P1",
+  "context": "greenfield",
+  "actors": [
+    "authenticated user"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "given": "no",
+      "when": "They perform the action",
+      "then": "The expected result occurs",
+      "testable": true
+    }
+  ],
+  "definition_of_done": [
+    "Unit tests written and passing",
+    "Integration tests for all ACs passing",
+    "No regressions vs baseline snapshot",
+    "Coverage on new code >= 90%"
+  ],
+  "constraints": {
+    "must_not_break": [],
+    "performance_budget": "p99 < 100ms"
+  },
+  "ambiguity_flags": [],
+  "estimated_complexity": "M",
+  "generated_at": "2026-03-28T23:31:10.653Z"
+}
