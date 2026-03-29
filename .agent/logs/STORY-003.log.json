@@ -1,0 +1,17 @@
+{
+  "story_id": "STORY-003",
+  "title": "STORY-003",
+  "started_at": "2026-03-29T01:14:23.800Z",
+  "events": [
+    {
+      "at": "2026-03-29T01:14:23.800Z",
+      "phase": 2,
+      "type": "GATE",
+      "gate": "G2",
+      "decision": "APPROVED",
+      "actor": "Aroni Pani",
+      "role": "Architect",
+      "notes": "Approved"
+    }
+  ]
+}
