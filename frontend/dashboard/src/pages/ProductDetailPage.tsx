@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useProduct } from '../hooks/useProduct'
+import { useCart } from '../contexts/CartContext'
 import { ImageGallery } from '../components/ImageGallery'
 import { QuantitySelector } from '../components/QuantitySelector'
 import { NotFoundPage } from '../components/NotFoundPage'
@@ -8,6 +9,7 @@ import { NotFoundPage } from '../components/NotFoundPage'
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { product, isLoading, isNotFound } = useProduct(id ?? '')
+  const { addItem } = useCart()
   const [quantity, setQuantity] = useState(1)
 
   if (isLoading) return <p className="text-center py-8">Loading...</p>
@@ -42,6 +44,7 @@ export function ProductDetailPage() {
               />
               <button
                 type="button"
+                onClick={() => void addItem(product.id, quantity)}
                 className="w-full py-3 bg-blue-600 text-white rounded text-lg"
               >
                 Add to Cart
