@@ -1,102 +1,149 @@
 {
-  "version": "1.0.0",
   "project": "yooti-ri",
+  "version": "1.0.0",
+  "type": "full",
   "context": "greenfield",
   "stage": 3,
-  "stack": {
-    "services": [
-      {
-        "name": "batch",
-        "lang": "python",
-        "path": "batch/analytics"
-      },
-      {
-        "name": "frontend",
-        "lang": "react",
-        "path": "frontend/dashboard"
-      }
-    ]
-  },
+  "linter": "eslint",
+  "ci": "none",
+  "deploy": "docker",
+  "stack": [
+    "python",
+    "react"
+  ],
+  "databases": [
+    "postgres",
+    "pgvector",
+    "redis",
+    "age"
+  ],
+  "vector_store": "pgvector",
+  "agent_frameworks": [
+    "langgraph",
+    "langchain"
+  ],
+  "llm_providers": [
+    "anthropic"
+  ],
   "pipeline": {
-    "stage": 3,
-    "description": "Review — agent writes code and tests. Team reviews PR and controls all deploys.",
-    "phases": {
-      "requirements": "agent",
-      "planning": "agent",
-      "codegen": "agent",
-      "testing": "agent",
-      "pr_review": "human",
-      "staging": "human",
-      "production": "human"
-    },
-    "gates": {
-      "g1_pm_signoff": true,
-      "g2_arch_review": true,
-      "g3_pr_review": true,
-      "g4_qa_signoff": false,
-      "g5_deploy_approval": false
-    }
-  },
-  "toolchain": {
-    "api": {
-      "linter": "eslint",
-      "formatter": "prettier",
-      "type_check": "tsc",
-      "test_runner": "vitest",
-      "test_command": "npm run test:coverage",
-      "test_unit": "npm run test -- tests/unit/",
-      "test_integration": "npm run test -- tests/integration/",
-      "coverage_threshold": 80,
-      "new_code_threshold": 90,
-      "mutation": "stryker",
-      "security": [
-        "snyk",
-        "semgrep"
-      ]
-    },
-    "frontend": {
-      "linter": "eslint",
-      "type_check": "tsc",
-      "test_runner": "vitest",
-      "test_command": "npm run test:coverage",
-      "a11y_runner": "axe-core",
-      "e2e_runner": "playwright",
-      "component_isolation": "storybook",
-      "responsive_breakpoints": [
-        375,
-        768,
-        1280
+    "phases": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "human_gates": [
+      "G1",
+      "G2",
+      "G3",
+      "G4",
+      "G5"
+    ],
+    "agent_phases_at_stage": {
+      "1": [
+        1
       ],
-      "accessibility_standard": "WCAG21AA",
-      "performance": "lighthouse-ci"
-    },
-    "batch": {
-      "linter": "ruff",
-      "formatter": "ruff",
-      "type_check": "mypy",
-      "test_runner": "pytest",
-      "test_command": "pytest -m 'not eval and not integration'",
-      "test_unit": "pytest -m 'not eval and not integration'",
-      "test_integration": "pytest -m integration",
-      "test_evals": "pytest --eval",
-      "coverage_threshold": 80,
-      "aws_mock": "moto"
+      "2": [
+        1,
+        2
+      ],
+      "3": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "4": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "5": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
     }
   },
   "quality_gates": {
-    "coverage_threshold": 80,
-    "new_code_coverage": 90,
-    "mutation_score": 85,
-    "lighthouse_performance": 80,
-    "lighthouse_accessibility": 90,
-    "max_agent_iterations": 5,
-    "zero_lint_warnings": true,
-    "zero_type_errors": true,
-    "zero_security_findings": true,
-    "zero_a11y_violations": true
+    "coverage_overall": 80,
+    "coverage_new_code": 90,
+    "mutation_score_warn": 85,
+    "lint_errors": 0,
+    "type_errors": 0,
+    "security_critical": 0,
+    "security_high": 0
   },
-  "yooti_os": {
-    "enabled": false,
-    "endpoint": null
+  "toolchain": {
+    "frontend": {
+      "runtime": "node",
+      "version": "20",
+      "framework": "react",
+      "build_tool": "vite",
+      "linter": "eslint",
+      "type_check": "tsc --noEmit",
+      "test_runner": "vitest",
+      "test_command": "npm run test",
+      "test_coverage": "vitest --coverage",
+      "a11y_runner": "axe-core",
+      "e2e_runner": "playwright",
+      "lint_command": "eslint . --ext .ts,.tsx",
+      "coverage_threshold": 80,
+      "new_code_threshold": 90
+    },
+    "agents": {
+      "runtime": "python",
+      "version": "3.12",
+      "framework": "langgraph",
+      "linter": "ruff",
+      "formatter": "ruff",
+      "type_check": "mypy . --strict",
+      "test_runner": "pytest",
+      "test_command": "pytest -m \"not eval and not integration\"",
+      "test_unit": "pytest -m \"not eval and not integration\"",
+      "test_integration": "pytest -m integration",
+      "test_evals": "pytest --eval",
+      "test_coverage": "pytest --cov --cov-report=json",
+      "mutation": "mutmut run",
+      "lint_command": "ruff check . && ruff format --check .",
+      "coverage_threshold": 80,
+      "new_code_threshold": 90
+    },
+    "batch": {
+      "runtime": "python",
+      "version": "3.12",
+      "framework": "boto3",
+      "linter": "ruff",
+      "formatter": "ruff",
+      "type_check": "mypy . --strict",
+      "test_runner": "pytest",
+      "test_command": "pytest -m \"not integration\"",
+      "test_unit": "pytest -m \"not integration\"",
+      "test_integration": "pytest -m integration",
+      "test_coverage": "pytest --cov --cov-report=json",
+      "mutation": "mutmut run",
+      "lint_command": "ruff check . && ruff format --check .",
+      "coverage_threshold": 80,
+      "new_code_threshold": 90,
+      "aws_services": [
+        "s3",
+        "lambda",
+        "sqs",
+        "eventbridge"
+      ]
+    }
   }
 }

@@ -37,6 +37,20 @@ services:
       - postgres
     restart: unless-stopped
 
+  batch:
+    build: ./batch/analytics
+    environment:
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - S3_BUCKET=${S3_BUCKET}
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - ./batch/analytics:/app
+    profiles:
+      - batch
+    restart: unless-stopped
+
   frontend:
     build: ./frontend/dashboard
     ports:
