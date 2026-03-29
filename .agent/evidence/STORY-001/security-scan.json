@@ -1,0 +1,7 @@
+{
+  "story_id": "STORY-001",
+  "generated_at": "2026-03-29T03:42:47Z",
+  "snyk": { "critical": 0, "high": 0, "medium": 0, "low": 0 },
+  "semgrep": { "findings": 0 },
+  "note": "snyk and semgrep not installed locally — manual review recommended"
+}
