@@ -1,0 +1,88 @@
+{
+  "story_id": "STORY-003",
+  "title": "As a new visitor, I want to create an account so that I can place orders and track my purchases",
+  "type": "feature",
+  "priority": "P0",
+  "sprint": 1,
+  "affected_layers": [
+    "api",
+    "frontend"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "given": "a visitor submits the registration form with a valid email and password",
+      "when": "the form is submitted",
+      "then": "their account is created, they are automatically signed in, and redirected to the homepage",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-2",
+      "given": "a visitor submits a registration form with an email already registered",
+      "when": "the form is submitted",
+      "then": "they see: An account with this email already exists — and the form is not cleared",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-3",
+      "given": "a visitor submits a password shorter than 8 characters",
+      "when": "the form is submitted",
+      "then": "they see: Password must be at least 8 characters — before any API call is made",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-4",
+      "given": "a visitor submits an invalid email format",
+      "when": "the form is submitted",
+      "then": "they see: Please enter a valid email address — before any API call is made",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-5",
+      "given": "a new account is created",
+      "when": "registration completes",
+      "then": "a welcome email is sent to the registered address within 60 seconds",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-6",
+      "given": "5 or more failed registration attempts are made from the same IP in 15 minutes",
+      "when": "the next attempt is made",
+      "then": "the response is 429 with: Too many attempts. Please try again in 15 minutes.",
+      "testable": true,
+      "test_layer": "integration"
+    }
+  ],
+  "non_functional_requirements": {
+    "performance": "Registration API responds in under 500ms at P95",
+    "accessibility": "Form inputs have associated labels. Error messages linked via aria-describedby.",
+    "security": "Passwords hashed with bcrypt cost factor 12. Email enumeration prevented. Rate limiting enforced."
+  },
+  "definition_of_done": [
+    "All AC have passing tests",
+    "Password hashing verified in unit tests",
+    "Rate limiting verified in integration tests",
+    "Email enumeration timing test passes",
+    "Coverage on new code >= 90%",
+    "Security scan: 0 HIGH/CRITICAL",
+    "Accessibility: 0 axe-core violations",
+    "Mutation score >= 85%"
+  ],
+  "constitutions_to_apply": [
+    "typescript",
+    "react",
+    "postgresql",
+    "security",
+    "testing"
+  ],
+  "api_endpoints": [
+    "POST /api/v1/auth/register"
+  ],
+  "estimated_complexity": "M",
+  "ambiguity_flags": []
+}

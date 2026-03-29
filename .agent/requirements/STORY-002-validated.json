@@ -1,0 +1,77 @@
+{
+  "story_id": "STORY-002",
+  "title": "As a shopper, I want to view a product detail page so that I can see full information before purchasing",
+  "type": "feature",
+  "priority": "P0",
+  "sprint": 1,
+  "affected_layers": [
+    "api",
+    "frontend"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "given": "a shopper clicks on a product in the catalogue",
+      "when": "the product detail page loads",
+      "then": "they see product name, full description, price, all available images, stock quantity, and category",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-2",
+      "given": "a product has multiple images",
+      "when": "the shopper clicks a thumbnail",
+      "then": "the main image updates to show the selected thumbnail",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-3",
+      "given": "a shopper selects a quantity greater than available stock",
+      "when": "the quantity is changed",
+      "then": "the quantity is capped at available stock and a message explains why",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-4",
+      "given": "a shopper navigates directly to a product URL",
+      "when": "the product does not exist",
+      "then": "they see a 404 page with a link back to the catalogue",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-5",
+      "given": "a shopper is on a product detail page",
+      "when": "they click Add to Cart",
+      "then": "the item is added to their cart and the cart icon shows the updated count",
+      "testable": true,
+      "test_layer": "integration"
+    }
+  ],
+  "non_functional_requirements": {
+    "performance": "Product detail page loads in under 1 second at P95",
+    "accessibility": "Images have descriptive alt text. Quantity input has label and min/max attributes.",
+    "security": "Product ID in URL validated as UUID — not a sequential integer"
+  },
+  "definition_of_done": [
+    "All AC have passing tests",
+    "Coverage on new code >= 90%",
+    "Security scan: 0 HIGH/CRITICAL",
+    "Accessibility: 0 axe-core violations",
+    "Mutation score >= 85%"
+  ],
+  "constitutions_to_apply": [
+    "typescript",
+    "react",
+    "postgresql",
+    "security",
+    "testing"
+  ],
+  "api_endpoints": [
+    "GET /api/v1/products/:id"
+  ],
+  "estimated_complexity": "S",
+  "ambiguity_flags": []
+}

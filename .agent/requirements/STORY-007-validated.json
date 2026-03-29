@@ -1,0 +1,80 @@
+{
+  "story_id": "STORY-007",
+  "title": "As a signed-in user, I want to view my order history so that I can track past purchases",
+  "type": "feature",
+  "priority": "P1",
+  "sprint": 2,
+  "affected_layers": [
+    "api",
+    "frontend"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "given": "a signed-in user navigates to My Orders",
+      "when": "the page loads",
+      "then": "they see all past orders sorted by date descending showing order number, date, status, and total",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-2",
+      "given": "a signed-in user clicks on an order",
+      "when": "the order detail page loads",
+      "then": "they see all items ordered, quantities, individual prices, delivery address, and current status",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-3",
+      "given": "a user attempts to access another user's order by manipulating the order ID in the URL",
+      "when": "the request is made",
+      "then": "they receive a 404 — the order is not found and no information about its existence is revealed",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-4",
+      "given": "a user has more than 10 orders",
+      "when": "they view the orders page",
+      "then": "orders are paginated with 10 per page and pagination controls allow navigation",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-5",
+      "given": "a user has no orders",
+      "when": "they view the orders page",
+      "then": "they see: You have not placed any orders yet with a link to the catalogue",
+      "testable": true,
+      "test_layer": "unit"
+    }
+  ],
+  "non_functional_requirements": {
+    "performance": "Order list loads in under 500ms at P95",
+    "security": "Orders scoped to authenticated user — user ID from JWT not request body. Unauthenticated requests redirected to login.",
+    "accessibility": "Order status communicated with text not colour alone. Table has proper column headers."
+  },
+  "definition_of_done": [
+    "All AC have passing tests",
+    "IDOR test passes: user cannot access other user orders",
+    "Authentication requirement verified",
+    "Coverage on new code >= 90%",
+    "Security scan: 0 HIGH/CRITICAL",
+    "Accessibility: 0 axe-core violations",
+    "Mutation score >= 85%"
+  ],
+  "constitutions_to_apply": [
+    "typescript",
+    "react",
+    "postgresql",
+    "security",
+    "testing"
+  ],
+  "api_endpoints": [
+    "GET /api/v1/orders?page=&limit=",
+    "GET /api/v1/orders/:id"
+  ],
+  "estimated_complexity": "M",
+  "ambiguity_flags": []
+}

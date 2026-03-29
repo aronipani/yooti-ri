@@ -12,6 +12,36 @@ FAIL: sprint does not start
 - [ ] No breaking cross-system changes without approval
 FAIL: code generation does not begin
 
+### Plan quality checklist — architect reviews each plan against this
+
+DECOMPOSITION
+- [ ] Tasks split by layer — not by acceptance criterion
+- [ ] No more tasks than the complexity allows
+  (XS=1, S=1-2, M=2-3, L=3-4, XL=4-5)
+- [ ] Each task touches no more than 5-7 files
+- [ ] Every AC from the story is covered by at least one task
+- [ ] No AC is left without a task covering it
+
+SCOPE
+- [ ] Every file in CREATE/MODIFY scope is necessary for this task
+- [ ] OUT OF SCOPE section lists unrelated directories
+- [ ] No file appears in two tasks (no overlap between tasks)
+- [ ] Scope does not bleed into unrelated services
+
+DEPENDENCIES
+- [ ] Tasks are ordered correctly — database before API before frontend
+- [ ] Dependency chain has no circular references
+- [ ] Tasks that can run in parallel are identified
+
+IMPLEMENTATION STEPS
+- [ ] Steps are actionable and specific
+- [ ] Steps follow the correct order
+- [ ] Steps reference the right files from scope
+- [ ] No step touches a file outside the scope
+
+APPROVE when all boxes above are checked.
+REJECT with specific feedback on which box failed and why.
+
 ## G3 Developer PR Review (Days 6-8)
 - [ ] Code matches intent
 - [ ] No out-of-scope file changes

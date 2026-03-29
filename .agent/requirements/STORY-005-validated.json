@@ -1,0 +1,91 @@
+{
+  "story_id": "STORY-005",
+  "title": "As a shopper, I want to manage my shopping cart so that I can review and adjust my items before checkout",
+  "type": "feature",
+  "priority": "P0",
+  "sprint": 1,
+  "affected_layers": [
+    "api",
+    "frontend"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "given": "a shopper adds a product to their cart",
+      "when": "the item is added",
+      "then": "the cart icon shows the updated item count and the item appears in the cart drawer with name, price, quantity, and subtotal",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-2",
+      "given": "a shopper adds the same product twice",
+      "when": "the second add occurs",
+      "then": "the quantity increments by 1 rather than creating a duplicate line item",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-3",
+      "given": "a shopper changes the quantity of a cart item to 0",
+      "when": "the change is confirmed",
+      "then": "the item is removed from the cart",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-4",
+      "given": "a shopper has items in their cart",
+      "when": "they close the browser and return within 7 days",
+      "then": "their cart items are still present",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-5",
+      "given": "a cart item's stock drops below the quantity in the cart",
+      "when": "the shopper views their cart",
+      "then": "a warning appears showing the new stock level and quantity is adjusted to maximum available",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-6",
+      "given": "a shopper views a non-empty cart",
+      "when": "the cart drawer opens",
+      "then": "they see the order subtotal, estimated tax, and a Proceed to Checkout button",
+      "testable": true,
+      "test_layer": "integration"
+    }
+  ],
+  "non_functional_requirements": {
+    "performance": "Cart updates reflect in under 200ms",
+    "security": "Cart stored server-side for authenticated users. Guest carts in Redis with 7-day TTL. Prices validated server-side at checkout.",
+    "accessibility": "Quantity inputs have labels. Remove buttons have aria-labels. Cart total announced to screen readers on update."
+  },
+  "definition_of_done": [
+    "All AC have passing tests",
+    "Price validation server-side verified",
+    "Guest cart Redis TTL verified",
+    "Stock validation at view time verified",
+    "Coverage on new code >= 90%",
+    "Security scan: 0 HIGH/CRITICAL",
+    "Accessibility: 0 axe-core violations",
+    "Mutation score >= 85%"
+  ],
+  "constitutions_to_apply": [
+    "typescript",
+    "react",
+    "postgresql",
+    "security",
+    "testing"
+  ],
+  "api_endpoints": [
+    "GET    /api/v1/cart",
+    "POST   /api/v1/cart/items",
+    "PUT    /api/v1/cart/items/:productId",
+    "DELETE /api/v1/cart/items/:productId"
+  ],
+  "estimated_complexity": "L",
+  "ambiguity_flags": []
+}

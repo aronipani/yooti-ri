@@ -57,6 +57,84 @@ Test layers for any agent story:
 Never add a .claude/ folder inside agents/
 All Claude context lives here in the root .claude/ folder
 
+## How to decompose stories into tasks — Phase 2 rules
+
+A task is NOT one acceptance criterion.
+A task is one logical unit of work at one layer that can be
+built, committed, and tested independently.
+
+RULE 1 — Split by layer, not by AC
+  Database schema changes   → one task
+  API endpoint changes      → one task (depends on database task)
+  Frontend component        → one task (depends on API task)
+  Agent / LangGraph changes → one task (separate from API)
+  Email / async workers     → one task (separate from API)
+
+RULE 2 — Maximum files per task
+  A task should touch no more than 5-7 files.
+  If a task needs more files, split it into two tasks.
+
+RULE 3 — One task covers multiple AC
+  AC are requirements. Tasks are implementation units.
+  A single task typically covers 2-4 AC.
+  Never create one task per AC.
+
+RULE 4 — Dependency order is mandatory
+  Tasks run sequentially — T001 completes before T002 starts.
+  Always specify which task depends on which.
+  Database tasks always come before API tasks.
+  API tasks always come before frontend tasks.
+
+RULE 5 — Maximum tasks per story by complexity
+  XS story → 1 task
+  S story  → 1-2 tasks
+  M story  → 2-3 tasks
+  L story  → 3-4 tasks
+  XL story → 4-5 tasks
+  If you need more tasks than this, the story is too large.
+  Raise an escalation — do not create extra tasks autonomously.
+
+CORRECT decomposition example — User registration (M complexity)
+
+  T001 — Database schema and user model
+    Layer: database
+    Files: prisma/schema.prisma, src/models/user.ts
+    AC covered: AC-1 (foundation for account creation)
+    Depends on: none
+
+  T002 — Registration API endpoint with rate limiting
+    Layer: api
+    Files: src/routes/auth/register.ts,
+           src/services/auth.service.ts,
+           src/middleware/rate-limit.ts
+    AC covered: AC-1, AC-2, AC-3, AC-4, AC-6
+    Depends on: T001
+
+  T003 — Welcome email service
+    Layer: api (async worker)
+    Files: src/services/email.service.ts
+    AC covered: AC-5
+    Depends on: T002
+
+  T004 — Registration frontend form
+    Layer: frontend
+    Files: src/pages/Register.tsx,
+           src/components/RegisterForm.tsx
+    AC covered: AC-1, AC-3, AC-4
+    Depends on: T002
+
+WRONG decomposition example — do not do this
+
+  T001 — AC-1 account creation     ✗ one AC per task
+  T002 — AC-2 duplicate email      ✗ one AC per task
+  T003 — AC-3 password validation  ✗ one AC per task
+  T004 — AC-4 email validation     ✗ one AC per task
+  T005 — AC-5 welcome email        ✗ one AC per task
+  T006 — AC-6 rate limiting        ✗ one AC per task
+
+If you find yourself creating one task per AC you are doing
+it wrong. Stop, re-read these rules, and start over.
+
 ## Agent read order — execute before every task
 
 1. Read .agent/requirements/[STORY-ID]-validated.json       — the spec

@@ -1,0 +1,90 @@
+{
+  "story_id": "STORY-006",
+  "title": "As a shopper, I want to complete a checkout so that I can place and pay for my order",
+  "type": "feature",
+  "priority": "P0",
+  "sprint": 2,
+  "affected_layers": [
+    "api",
+    "frontend"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "given": "a shopper proceeds to checkout with items in their cart",
+      "when": "the checkout page loads",
+      "then": "they see a summary of cart items, delivery address form, and payment section",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-2",
+      "given": "a shopper completes all checkout fields and submits",
+      "when": "the order is placed successfully",
+      "then": "they see an order confirmation page with order number, item summary, and estimated delivery date",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-3",
+      "given": "an order is placed successfully",
+      "when": "placement completes",
+      "then": "a confirmation email is sent within 60 seconds containing the order number and itemised summary",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-4",
+      "given": "an item in the cart went out of stock between cart and checkout",
+      "when": "the order is submitted",
+      "then": "the order is rejected and the shopper is returned to the cart with a message identifying the out-of-stock item",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-5",
+      "given": "a payment fails",
+      "when": "the shopper is notified",
+      "then": "they see a clear error message, no order is created, and no stock is reserved",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-6",
+      "given": "two shoppers attempt to purchase the last unit of a product simultaneously",
+      "when": "both orders are submitted",
+      "then": "only one order succeeds and the other receives an out-of-stock error — no overselling occurs",
+      "testable": true,
+      "test_layer": "integration"
+    }
+  ],
+  "non_functional_requirements": {
+    "performance": "Checkout submission responds in under 2 seconds at P95",
+    "security": "Prices recalculated server-side. Payment details never logged. Idempotency key required to prevent duplicate orders.",
+    "accessibility": "All form fields have labels. Progress steps announced to screen readers."
+  },
+  "definition_of_done": [
+    "All AC have passing tests",
+    "Server-side price recalculation verified",
+    "Stock decrement atomicity verified with concurrent order test",
+    "Idempotency key test: same key twice creates one order not two",
+    "Payment details absence from logs verified",
+    "Coverage on new code >= 90%",
+    "Security scan: 0 HIGH/CRITICAL",
+    "Accessibility: 0 axe-core violations",
+    "Mutation score >= 85%"
+  ],
+  "constitutions_to_apply": [
+    "typescript",
+    "react",
+    "postgresql",
+    "security",
+    "testing"
+  ],
+  "api_endpoints": [
+    "POST /api/v1/orders",
+    "GET  /api/v1/orders/:id"
+  ],
+  "estimated_complexity": "XL",
+  "ambiguity_flags": []
+}

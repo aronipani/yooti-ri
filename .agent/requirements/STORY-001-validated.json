@@ -1,0 +1,79 @@
+{
+  "story_id": "STORY-001",
+  "title": "As a shopper, I want to browse the product catalogue so that I can find items to purchase",
+  "type": "feature",
+  "priority": "P0",
+  "sprint": 1,
+  "affected_layers": [
+    "api",
+    "frontend"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "given": "a shopper visits the shop homepage",
+      "when": "the page loads",
+      "then": "they see a grid of products showing name, price, thumbnail image, and stock status",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-2",
+      "given": "a shopper is on the catalogue page",
+      "when": "they filter by category",
+      "then": "only products in that category are shown and the URL updates to reflect the filter",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-3",
+      "given": "a shopper is on the catalogue page",
+      "when": "they sort by price low to high",
+      "then": "products are reordered with the lowest price first",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-4",
+      "given": "a product is out of stock",
+      "when": "it appears in the catalogue",
+      "then": "it shows an Out of Stock badge and the Add to Cart button is disabled",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-5",
+      "given": "there are more than 20 products",
+      "when": "the shopper reaches the bottom of the page",
+      "then": "the next 20 products load automatically without a full page reload",
+      "testable": true,
+      "test_layer": "integration"
+    }
+  ],
+  "non_functional_requirements": {
+    "performance": "Catalogue page loads in under 1.5 seconds at P95 with 100 products",
+    "accessibility": "Product grid is navigable by keyboard. Each product card has a descriptive aria-label.",
+    "security": "No authentication required — catalogue is public"
+  },
+  "definition_of_done": [
+    "All AC have passing integration tests",
+    "Coverage on new code >= 90%",
+    "Security scan: 0 HIGH/CRITICAL",
+    "Accessibility: 0 axe-core violations",
+    "Lighthouse performance score >= 80",
+    "Mutation score >= 85%"
+  ],
+  "constitutions_to_apply": [
+    "typescript",
+    "react",
+    "postgresql",
+    "security",
+    "testing"
+  ],
+  "api_endpoints": [
+    "GET /api/v1/products?category=&sort=&page=&limit=",
+    "GET /api/v1/categories"
+  ],
+  "estimated_complexity": "M",
+  "ambiguity_flags": []
+}

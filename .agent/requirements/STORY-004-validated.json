@@ -1,0 +1,81 @@
+{
+  "story_id": "STORY-004",
+  "title": "As a registered user, I want to sign in and out of my account so that I can access my order history and saved details",
+  "type": "feature",
+  "priority": "P0",
+  "sprint": 1,
+  "affected_layers": [
+    "api",
+    "frontend"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "given": "a registered user submits valid credentials",
+      "when": "they sign in",
+      "then": "they are redirected to the homepage, their name appears in the header, and they stay signed in on page refresh",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-2",
+      "given": "a user submits incorrect credentials",
+      "when": "they attempt to sign in",
+      "then": "they see: Incorrect email or password — no indication given which field is wrong",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-3",
+      "given": "a signed-in user clicks Sign Out",
+      "when": "sign out completes",
+      "then": "their session is invalidated server-side, they are redirected to the homepage, and protected routes are inaccessible",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-4",
+      "given": "a user's session token expires after 24 hours",
+      "when": "they try to access a protected page",
+      "then": "they are redirected to sign-in with: Your session has expired. Please sign in again.",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-5",
+      "given": "a user makes 10 failed login attempts",
+      "when": "the 11th attempt is made",
+      "then": "the account is temporarily locked for 30 minutes and the user sees a clear message",
+      "testable": true,
+      "test_layer": "integration"
+    }
+  ],
+  "non_functional_requirements": {
+    "performance": "Login API responds in under 300ms at P95",
+    "security": "JWT tokens with 24h expiry. Refresh token in httpOnly cookie not localStorage. Session invalidated server-side on logout.",
+    "accessibility": "Error messages associated with form fields via aria-describedby"
+  },
+  "definition_of_done": [
+    "All AC have passing tests",
+    "Token storage verified: httpOnly cookie not localStorage",
+    "Server-side session invalidation verified on logout",
+    "Brute force lockout verified in integration tests",
+    "Coverage on new code >= 90%",
+    "Security scan: 0 HIGH/CRITICAL",
+    "Mutation score >= 85%"
+  ],
+  "constitutions_to_apply": [
+    "typescript",
+    "react",
+    "postgresql",
+    "security",
+    "testing"
+  ],
+  "api_endpoints": [
+    "POST /api/v1/auth/login",
+    "POST /api/v1/auth/logout",
+    "POST /api/v1/auth/refresh"
+  ],
+  "estimated_complexity": "M",
+  "ambiguity_flags": []
+}

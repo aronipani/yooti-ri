@@ -1,0 +1,56 @@
+{
+  "story_id": "STORY-010",
+  "title": "Security: Add rate limiting to all authentication endpoints to prevent brute force attacks",
+  "type": "bugfix",
+  "subtype": "security",
+  "priority": "P0",
+  "sprint": 1,
+  "affected_layers": [
+    "api"
+  ],
+  "vulnerability_description": "Authentication endpoints have no rate limiting. An attacker can make unlimited requests to brute force passwords or enumerate registered emails.",
+  "severity": "HIGH",
+  "affected_component": "services/api/src/routes/auth/",
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "given": "any IP makes more than 10 requests to POST /api/v1/auth/login within 15 minutes",
+      "when": "the 11th request is made",
+      "then": "the response is 429 Too Many Requests with a Retry-After header",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-2",
+      "given": "rate limit counters are stored in Redis and Redis becomes unavailable",
+      "when": "a request is made",
+      "then": "requests are allowed through — rate limiting degrades gracefully",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-3",
+      "given": "more than 5 registration attempts are made from one IP in 1 hour",
+      "when": "the next attempt is made",
+      "then": "it returns 429 with a Retry-After header",
+      "testable": true,
+      "test_layer": "integration"
+    }
+  ],
+  "definition_of_done": [
+    "Rate limiting test passes on all three auth endpoints",
+    "Redis unavailability graceful degradation test passes",
+    "Retry-After header present in all 429 responses",
+    "Coverage on new code >= 90%",
+    "Security scan: 0 HIGH/CRITICAL",
+    "Mutation score >= 85%"
+  ],
+  "constitutions_to_apply": [
+    "typescript",
+    "security",
+    "testing"
+  ],
+  "agent_instructions": "Write the test that demonstrates missing rate limiting FIRST. Confirm it fails. Then implement. Confirm it passes.",
+  "estimated_complexity": "S",
+  "ambiguity_flags": []
+}

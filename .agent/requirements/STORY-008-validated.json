@@ -1,0 +1,80 @@
+{
+  "story_id": "STORY-008",
+  "title": "As a shopper, I want to search for products by name or description so that I can find specific items quickly",
+  "type": "feature",
+  "priority": "P1",
+  "sprint": 2,
+  "affected_layers": [
+    "api",
+    "frontend"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "given": "a shopper types at least 2 characters in the search bar",
+      "when": "the input is debounced at 300ms",
+      "then": "search results appear showing matching products by name or description",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-2",
+      "given": "a shopper searches for a term that matches no products",
+      "when": "results load",
+      "then": "they see: No products found for [search term] with a suggestion to browse by category",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-3",
+      "given": "a shopper types rapidly in the search bar",
+      "when": "keystrokes occur faster than 300ms apart",
+      "then": "the API is called at most once per 300ms — not on every keystroke",
+      "testable": true,
+      "test_layer": "unit"
+    },
+    {
+      "id": "AC-4",
+      "given": "a shopper submits a search query containing SQL special characters",
+      "when": "the search executes",
+      "then": "the characters are treated as literal text and no SQL error occurs",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-5",
+      "given": "a shopper clears the search bar",
+      "when": "the input is empty",
+      "then": "results are cleared and the full catalogue is restored",
+      "testable": true,
+      "test_layer": "unit"
+    }
+  ],
+  "non_functional_requirements": {
+    "performance": "Search API responds in under 300ms at P95 for catalogues up to 10000 products",
+    "security": "Search query sanitised — parameterised queries only. Maximum query length 200 characters.",
+    "accessibility": "Search input has role=search. Results region has aria-live=polite."
+  },
+  "definition_of_done": [
+    "All AC have passing tests",
+    "SQL injection test passes",
+    "Debounce behaviour verified in unit test",
+    "Full text search index on products table verified in migration",
+    "Coverage on new code >= 90%",
+    "Security scan: 0 HIGH/CRITICAL",
+    "Accessibility: 0 axe-core violations",
+    "Mutation score >= 85%"
+  ],
+  "constitutions_to_apply": [
+    "typescript",
+    "react",
+    "postgresql",
+    "security",
+    "testing"
+  ],
+  "api_endpoints": [
+    "GET /api/v1/products/search?q=&page=&limit="
+  ],
+  "estimated_complexity": "M",
+  "ambiguity_flags": []
+}

@@ -1,0 +1,83 @@
+{
+  "story_id": "STORY-009",
+  "title": "As an admin, I want to manage products so that I can add, update, and remove items from the catalogue",
+  "type": "feature",
+  "priority": "P1",
+  "sprint": 2,
+  "affected_layers": [
+    "api",
+    "frontend"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "given": "an admin submits the add product form with all required fields",
+      "when": "the form is submitted",
+      "then": "the product is created and appears in the catalogue immediately",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-2",
+      "given": "an admin updates a product price",
+      "when": "the update is saved",
+      "then": "the new price appears in the catalogue and on the product detail page within 5 seconds",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-3",
+      "given": "an admin attempts to delete a product that has pending orders",
+      "when": "deletion is attempted",
+      "then": "the deletion is blocked with: This product has pending orders and cannot be deleted. Archive it instead.",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-4",
+      "given": "a non-admin user attempts to access admin product endpoints",
+      "when": "the request is made",
+      "then": "they receive a 403 Forbidden response regardless of authentication status",
+      "testable": true,
+      "test_layer": "integration"
+    },
+    {
+      "id": "AC-5",
+      "given": "an admin uploads a product image larger than 5MB or not an image format",
+      "when": "the upload is attempted",
+      "then": "the upload is rejected with a clear error message before any server processing occurs",
+      "testable": true,
+      "test_layer": "unit"
+    }
+  ],
+  "non_functional_requirements": {
+    "performance": "Admin product list loads in under 1 second with up to 1000 products",
+    "security": "Admin role verified server-side on every request. File upload validated for type and size before storage.",
+    "accessibility": "Admin forms follow same accessibility standards as public forms"
+  },
+  "definition_of_done": [
+    "All AC have passing tests",
+    "Authorisation bypass test: non-admin JWT rejected at every admin endpoint",
+    "File upload validation: oversized and invalid type both rejected",
+    "Pending order block test verified",
+    "Coverage on new code >= 90%",
+    "Security scan: 0 HIGH/CRITICAL",
+    "Mutation score >= 85%"
+  ],
+  "constitutions_to_apply": [
+    "typescript",
+    "react",
+    "postgresql",
+    "security",
+    "testing"
+  ],
+  "api_endpoints": [
+    "GET    /api/v1/admin/products",
+    "POST   /api/v1/admin/products",
+    "PUT    /api/v1/admin/products/:id",
+    "DELETE /api/v1/admin/products/:id",
+    "POST   /api/v1/admin/products/:id/images"
+  ],
+  "estimated_complexity": "L",
+  "ambiguity_flags": []
+}
