@@ -3,9 +3,10 @@ Health check endpoint.
 Returns service status and version.
 Used by smoke tests, load balancers, and monitoring.
 """
+
+import structlog
 from fastapi import APIRouter
 from pydantic import BaseModel
-import structlog
 
 log = structlog.get_logger()
 router = APIRouter(tags=["health"])

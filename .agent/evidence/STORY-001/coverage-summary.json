@@ -1,0 +1,16 @@
+{
+  "story_id": "STORY-001",
+  "generated_at": "2026-03-29T03:42:47Z",
+  "overall": 75.95,
+  "new_code": 92.3,
+  "files": [
+    { "file": "src/models/category.py", "lines": 100.0, "branches": 100.0 },
+    { "file": "src/models/product.py", "lines": 100.0, "branches": 100.0 },
+    { "file": "src/types/product.py", "lines": 100.0, "branches": 100.0 },
+    { "file": "src/services/product_service.py", "lines": 100.0, "branches": 100.0 },
+    { "file": "src/repositories/product_repository.py", "lines": 38.1, "branches": 0.0 },
+    { "file": "src/routes/products.py", "lines": 66.7, "branches": 0.0 },
+    { "file": "scripts/seed_products.py", "lines": 100.0, "branches": 100.0 }
+  ],
+  "note": "Overall 75.95% is below 80% threshold — repository and route layers have low coverage because they require integration tests with a real database. Service layer (business logic) is at 100%. New code in services/types/models is at 92.3%."
+}
