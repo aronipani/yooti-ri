@@ -1,0 +1,9 @@
+{
+  "story_id": "STORY-001",
+  "generated_at": "2026-03-29T03:42:47Z",
+  "baseline_sprint": "sprint-1",
+  "newly_failing": [],
+  "newly_passing": ["test_category_table_name_is_categories", "test_product_table_name_is_products", "test_returns_paginated_response", "test_maps_product_fields", "test_renders_product_name", "test_renders_formatted_price"],
+  "total_tests_before": 4,
+  "total_tests_after": 50
+}
