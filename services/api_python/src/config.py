@@ -2,8 +2,10 @@
 Application configuration — loaded from environment variables.
 Never hardcode values here. Add all new config to .env.example.
 """
-from pydantic_settings import BaseSettings
+
 from functools import lru_cache
+
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -16,6 +18,8 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+asyncpg://app:app@localhost:5432/appdb"
     # Redis
     redis_url: str = "redis://localhost:6379"
+    # Auth
+    jwt_secret_key: str = "change-me-in-production"
     # LLM
     anthropic_api_key: str = ""
 

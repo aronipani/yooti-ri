@@ -2,11 +2,15 @@
 Async SQLAlchemy database session.
 Import get_db as a FastAPI dependency in route handlers.
 """
+
+from collections.abc import AsyncGenerator
+
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
+
 from .config import settings
 
 engine = create_async_engine(
@@ -24,7 +28,7 @@ AsyncSessionLocal = async_sessionmaker(
 )
 
 
-async def get_db() -> AsyncSession:
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """FastAPI dependency — inject into route handlers."""
     async with AsyncSessionLocal() as session:
         try:

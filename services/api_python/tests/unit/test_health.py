@@ -2,6 +2,7 @@
 Unit tests for the health endpoint.
 Example of the test pattern to follow for all route tests.
 """
+
 import pytest
 from httpx import AsyncClient
 

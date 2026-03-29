@@ -9,13 +9,14 @@
  */
 import React, { type ReactElement } from 'react'
 import { render, type RenderOptions } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { axe, toHaveNoViolations } from 'jest-axe'
 
 expect.extend(toHaveNoViolations)
 
-// Add your providers here (router, theme, auth, etc.)
+// Wraps components with all required providers
 function AllProviders({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  return <MemoryRouter>{children}</MemoryRouter>
 }
 
 export function renderWithProviders(

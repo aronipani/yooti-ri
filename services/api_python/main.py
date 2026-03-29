@@ -6,9 +6,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import structlog
 
-from .src.config import settings
-from .src.middleware.logging import LoggingMiddleware
-from .src.routes.health import router as health_router
+from src.config import settings
+from src.middleware.logging import LoggingMiddleware
+from src.routes.health import router as health_router
+from src.routes.auth import router as auth_router
+from src.routes.cart import router as cart_router
+from src.routes.products import router as products_router
 
 log = structlog.get_logger()
 
@@ -35,6 +38,6 @@ app.add_middleware(
 app.add_middleware(LoggingMiddleware)
 
 app.include_router(health_router)
-
-# Add more routers here as stories are completed
-# app.include_router(users_router, prefix="/api/v1")
+app.include_router(products_router)
+app.include_router(auth_router)
+app.include_router(cart_router)

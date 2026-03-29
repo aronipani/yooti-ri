@@ -2,7 +2,10 @@
 Request logging middleware using structlog.
 Logs every request with method, path, status, and duration.
 """
+
 import time
+from collections.abc import Awaitable, Callable
+
 import structlog
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
@@ -12,7 +15,11 @@ log = structlog.get_logger()
 
 
 class LoggingMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next) -> Response:
+    async def dispatch(
+        self,
+        request: Request,
+        call_next: Callable[[Request], Awaitable[Response]],
+    ) -> Response:
         start = time.perf_counter()
         log.info(
             "request.start",
